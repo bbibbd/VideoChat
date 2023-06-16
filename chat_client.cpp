@@ -1,3 +1,8 @@
+// g++ chat_client.cpp -o chat_client -lboost_system -lpthread -std=c++11 $(pkg-config --libs --cflags opencv4)
+
+#define VIDEO
+// #define WEBCAM
+
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
 #include <thread>
@@ -44,15 +49,30 @@ void receiveFrames(tcp::socket& socket, const std::string& userName) {
 }
 
 int main(int argc, char* argv[]) {
+
+#ifdef VIDEO
     if (argc != 5) {
         std::cerr << "usage: ./chat_client IP_ADDR PORT_NUM USERNAME VIDEO_FILE" << std::endl;
         exit(-1);
     }
+#else
+    if (argc != 5) {
+        std::cerr << "usage: ./chat_client IP_ADDR PORT_NUM USERNAME CAM_INDEX" << std::endl;
+        exit(-1);
+    }
+
+#endif
+
 
     std::string ip_addr = argv[1];
     std::string port = argv[2];
     std::string userName = argv[3];
+#ifdef VIDEO
     std::string fileName = argv[4];
+#else
+    int fileName = std::stoi(argv[4]);
+#endif
+
 
     for (int i = 0; i < 2; i++) {
         frame[i] = cv::imread("my_photo.jpg", 1);
@@ -60,7 +80,11 @@ int main(int argc, char* argv[]) {
 
     cv::VideoCapture cap(fileName);
         if (!cap.isOpened()) {
+#ifdef VIDEO
         std::cerr << "Failed to open video file" << std::endl;
+#else
+        std::cerr << "Failed to open webcam index " << filename << std::endl;
+#endif
         return -1;
     }
 
