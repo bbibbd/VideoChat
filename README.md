@@ -40,7 +40,7 @@
    
       $ ./chat_client IP_ADDR PORT_NUM USERNAME VIDEO_FILE
 
-    + if you want to run with your own webcam, please remove '#ifdef VIDEO' in the client code and compile it again.
+    + if you want to run with your own webcam, please remove '#define VIDEO' in the client code and compile it again.
    
 
 ## Linitations
